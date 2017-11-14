@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,7 +34,8 @@ public class GUI{
     private static ChangeListener listener1,listener2,listener3;
     private static ActionListener listener4;
     private static JLabel gordyn,energy;
-    private static boolean OnOff;
+    private static JToggleButton toggleEnergy;
+    private static boolean OnOff,toggleEnergySvg;
     private static double temp,windSpeed;
     private static int time;
     private static double temp2,energySvg;
@@ -84,24 +84,6 @@ public class GUI{
 	c.gridy = 0;
 	pane.add(label, c);
 	
-	JLabel label2 = new JLabel("Temperature");
-	c.weightx = 0.5;
-	c.gridx = 1;
-	c.gridy = 0;
-	pane.add(label2, c);
-	
-	
-	// add a slider with numeric labels
-	slider = new JSlider(16,37);
-	slider.setPaintTicks(true);
-	slider.setPaintLabels(true);
-	slider.setSnapToTicks(true);
-	slider.setMajorTickSpacing(21);
-	slider.setMinorTickSpacing(1);
-	c.weightx = 0.5;
-	c.gridx = 1;
-	c.gridy = 1;
-	addSlider(slider,"",pane,c,listener1);
 	
 	textField = new JLabel("16 °C");
     c.gridx = 0;
@@ -110,7 +92,43 @@ public class GUI{
     c.gridheight=1;
     pane.add(textField,c);
     
- // add a slider with numeric labels
+    JLabel gordynLabel = new JLabel("Gordyn");
+    c.gridx = 0;
+    c.gridy = 2;
+    pane.add(gordynLabel,c);
+    
+    gordyn = new JLabel("OFF");
+    c.gridx = 0;
+    c.gridy = 3;
+    pane.add(gordyn,c);
+    
+    JLabel label2 = new JLabel("Temperature");
+    c.weightx = 0.5;
+    c.gridx = 1;
+    c.gridy = 0;
+    pane.add(label2, c);
+    
+    
+    // add a slider with numeric labels
+    slider = new JSlider(16,37);
+    slider.setPaintTicks(true);
+    slider.setPaintLabels(true);
+    slider.setSnapToTicks(true);
+    slider.setMajorTickSpacing(10);
+    slider.setMinorTickSpacing(1);
+    c.weightx = 0.5;
+    c.gridx = 1;
+    c.gridy = 1;
+    addSlider(slider,"",pane,c,listener1);
+    
+    JLabel anemo = new JLabel("Anemometer");
+    c.gridx = 1;
+    c.gridy = 2;
+    c.gridwidth=1;
+    c.gridheight=1;
+    pane.add(anemo,c);
+
+    // add a slider with numeric labels
  	JSlider anemometer = new JSlider(0,80);
  	anemometer.setPaintTicks(true);
  	anemometer.setPaintLabels(true);
@@ -127,7 +145,7 @@ public class GUI{
 	      // update text field when the slider value changes
 	      JSlider source = (JSlider) event.getSource();
 	      if(temp2!=-1){
-	    	  textField.setText(temp2+"");
+	    	  textField.setText(temp2+"°C");
 	      }
 	      else{
 	    	  textField.setText("AC OFF");
@@ -137,51 +155,11 @@ public class GUI{
 	};
  	addSlider(anemometer,"",pane,c,listener2);
  	
- 	JLabel anemo = new JLabel("Anemometer");
-     c.gridx = 1;
-     c.gridy = 2;
-     c.gridwidth=1;
-     c.gridheight=1;
-     pane.add(anemo,c);
      
-     JLabel gordynLabel = new JLabel("Gordyn");
-     c.gridx = 0;
-     c.gridy = 2;
-     pane.add(gordynLabel,c);
      
-     gordyn = new JLabel("OFF");
-     c.gridx = 0;
-     c.gridy = 3;
-     pane.add(gordyn,c);
      
-//     listener3 = new ChangeListener()
-//     {
-//  	   public void stateChanged(ChangeEvent event)
-//  	   {
-//  		   JToggleButton tgl = (JToggleButton)event.getSource();
-//  		 if(tgl.isSelected()){
-//  			 System.out.println("selected");
-//  			 OnOff=true;
-//  		 }else{
-//  			 System.out.println("not selected");
-//  			 OnOff=false;
-//  		 }
-//  	   }
-//  	};
-//  	gordyn.addChangeListener(listener3);
-  	
+
   	clockInput = new JTextField(5);
-//  	((AbstractDocument)clockInput.getDocument()).setDocumentFilter(new DocumentFilter(){
-//        Pattern regEx = Pattern.compile("\\d*");
-//        CharSequence arg3 = "asd";
-//        public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {          
-//            Matcher matcher = regEx.matcher();
-//            if(!matcher.matches()){
-//                return;
-//            }
-//            super.replace(fb, offset, length, text, attrs);
-//        }
-//    });
   	c.gridx = 1;
     c.gridy = 5;
     c.gridwidth=2;
@@ -221,6 +199,30 @@ public class GUI{
     c.gridwidth=1;
     c.gridheight=1;
     pane.add(energy, c);
+    
+    toggleEnergy = new JToggleButton("Energy Saving On/Off");
+    c.gridx = 0;
+    c.gridy = 5;
+  listener3 = new ChangeListener()
+  {
+	   public void stateChanged(ChangeEvent event)
+	   {
+		   JToggleButton tgl = (JToggleButton)event.getSource();
+		 if(tgl.isSelected()){
+			 System.out.println("selected");
+			 toggleEnergySvg=true;
+			 textField.setText(temp+"°C");
+			 energy.setText(energySvg+"%");
+		 }else{
+			 System.out.println("not selected");
+			 toggleEnergySvg=false;
+		 }
+	   }
+	};
+	toggleEnergy.addChangeListener(listener3);
+    pane.add(toggleEnergy, c);
+    
+    
     }
         
     public static void addSlider(JSlider s, String description,Container pane,GridBagConstraints c,ChangeListener listener)
@@ -287,6 +289,11 @@ public class GUI{
     public void setEnergy(double energySvg){
     	DecimalFormat df = new DecimalFormat("#.00");
     	this.energySvg = Double.parseDouble(df.format(energySvg));
+    }
+    
+    public boolean getEnergySavingMode(){
+    	
+		return toggleEnergySvg;
     }
  	    	
 }

@@ -10,7 +10,7 @@ public class AirConditionController implements Actor {// implements observer to
 	private GUI gui;
 	private double temp = 0;
 	private boolean energySavingMode = true;
-	private double desiredEnergySaving = 10;
+	private double desiredEnergySaving = 80;
 
 	public AirConditionController(GUI gui) {
 		this.gui = gui;
@@ -35,7 +35,7 @@ public class AirConditionController implements Actor {// implements observer to
 	@Override
 	public void update() {
 
-		// energySavingMode = gui.getEnergySavingMode(); //tambahan buat gino
+	    energySavingMode = gui.getEnergySavingMode();
 
 		Object object = interfaceSensor.get(0).getValue();
 		double windGUI = ((Double) object).doubleValue();
@@ -53,10 +53,11 @@ public class AirConditionController implements Actor {// implements observer to
 			if (!energySavingMode) {
 				temp = 27;
 			} else {
-				if (tempGUI < 27)
-					temp = ((desiredEnergySaving / 100) * (38 - tempGUI) + tempGUI);
+				if (tempGUI <= 27){
+					temp = (tempGUI+(((38-tempGUI)/desiredEnergySaving)));
+				}
 				else {
-					temp = ((desiredEnergySaving / 100) * (tempGUI - 38) + tempGUI);
+					temp = ((((desiredEnergySaving - 100) * (38 - tempGUI))/100) + tempGUI);
 				}
 
 			}
