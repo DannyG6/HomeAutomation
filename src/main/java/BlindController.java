@@ -40,7 +40,7 @@ public class BlindController implements Actor {
 		int timeGUI = ((Integer) object).intValue();
 		// System.out.println(timeGUI);
 
-		if ((timeGUI >= 1000 && timeGUI <=1200)) {
+		if (isAfternoon(timeGUI)) {
 			onOrOff = true;
 		} else {
 			onOrOff = false;
@@ -51,5 +51,9 @@ public class BlindController implements Actor {
 
 		setBlind(onOrOff);
 
+	}
+
+	private boolean isAfternoon(int timeGUI) {
+		return timeGUI >= 1000 && timeGUI <=1400;
 	}
 }

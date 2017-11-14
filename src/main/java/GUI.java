@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.print.attribute.AttributeSet;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,16 +30,15 @@ public class GUI{
     final static boolean shouldFill = true;
     final static boolean shouldWeightX = true;
     final static boolean RIGHT_TO_LEFT = false;
-    private static JTextField clockInput;
-    private static JLabel textField;
+    private static JTextField clockInput,desiredTempText,desiredEnergyText;
+    private static JLabel textField,costLabel;
     private static ChangeListener listener1,listener2,listener3;
-    private static ActionListener listener4;
-    private static JLabel gordyn,energy;
+    private static JLabel gordyn,energy,desiredTempLbl,desiredEnergyLbl;
     private static JToggleButton toggleEnergy;
     private static boolean OnOff,toggleEnergySvg;
     private static double temp,windSpeed;
     private static int time;
-    private static double temp2,energySvg;
+    private static double temp2,energySvg,cost,desiredTemp,desiredEnergySvg;
 
     public static void addComponentsToPane(Container pane) {
         if (RIGHT_TO_LEFT) {
@@ -67,9 +67,11 @@ public class GUI{
 				gordyn.setText("OFF");
 			}
 	      energy.setText(energySvg+"%");
+	      costLabel.setText("Cost : " + cost);
 	   }
 	};
-
+	
+	JPanel panel = new JPanel();
     JSlider slider;
 	pane.setLayout(new GridBagLayout());
 	GridBagConstraints c = new GridBagConstraints();
@@ -77,11 +79,12 @@ public class GUI{
 		//natural height, maximum width
 		c.fill = GridBagConstraints.HORIZONTAL;
 	}
-	  
-	JLabel label = new JLabel("AC");
-	c.weightx = 0.5;
+	ImageIcon image = new ImageIcon(new ImageIcon("D:/Kuliah/COMMSULT/project/Comsult/HomeAutomation/komsaletperojek-master/ac-icon.png")
+			.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT));
+	JLabel label = new JLabel(image);
 	c.gridx = 0;
 	c.gridy = 0;
+	panel.add(label);
 	pane.add(label, c);
 	
 	
@@ -200,7 +203,6 @@ public class GUI{
     c.gridheight=1;
     pane.add(energy, c);
     
- 
     toggleEnergy = new JToggleButton("Energy Saving On/Off");
     c.gridx = 0;
     c.gridy = 5;
@@ -213,8 +215,9 @@ public class GUI{
 			 toggleEnergySvg=true;
 			 textField.setText(temp+"°C");
 			 energy.setText(energySvg+"%");
+			 desiredTemp = Double.parseDouble(desiredTempText.getText());
+			 desiredEnergySvg = Double.parseDouble(desiredEnergyText.getText());
 		 }else{
-
 			 toggleEnergySvg=false;
 		 }
 	   }
@@ -222,6 +225,30 @@ public class GUI{
 	toggleEnergy.addChangeListener(listener3);
     pane.add(toggleEnergy, c);
     
+    desiredTempLbl = new JLabel("Desired Temperature");
+    c.gridx = 1;
+    c.gridy = 6;
+    pane.add(desiredTempLbl, c);
+    
+    desiredTempText = new JTextField();
+    c.gridx = 1;
+    c.gridy = 7;
+    pane.add(desiredTempText, c);
+    
+    desiredEnergyLbl = new JLabel("Desired Energy");
+    c.gridx = 0;
+    c.gridy = 6;
+    pane.add(desiredEnergyLbl, c);
+    
+    desiredEnergyText = new JTextField();
+    c.gridx = 0;
+    c.gridy = 7;
+    pane.add(desiredEnergyText, c);
+    
+    costLabel = new JLabel("Cost : ");
+    c.gridx = 0;
+    c.gridy = 8;
+    pane.add(costLabel, c);
     
     }
         
@@ -239,7 +266,7 @@ public class GUI{
      */
     private static void createGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("GridBagLayoutDemo");
+        JFrame frame = new JFrame("Home automation");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Set up the content pane.
@@ -295,5 +322,16 @@ public class GUI{
     	
 		return toggleEnergySvg;
     }
- 	    	
+    
+    public void setCost(double cost){
+    	this.cost = cost;
+    }
+    
+    public double getDesiredTemperature(){
+    	return desiredTemp;
+    }
+ 	    
+    public double getDesiredEnergySvg(){
+    	return desiredEnergySvg;
+    }
 }

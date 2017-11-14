@@ -10,8 +10,7 @@ public class AirConditionController implements Actor {// implements observer to
 	private GUI gui;
 	private double temp = 0;
 	private boolean energySavingMode = true;
-	private double desiredEnergySaving = 80;
-	private ArrayList<Double> energySaveAL = new ArrayList<Double>();
+	private double desiredEnergySaving = 20;
 	private double cost=0;
 	
 	public AirConditionController(GUI gui) {
@@ -38,7 +37,8 @@ public class AirConditionController implements Actor {// implements observer to
 	public void update() {
 
 		energySavingMode = gui.getEnergySavingMode();
-
+		desiredEnergySaving = gui.getDesiredEnergySvg();
+		
 		Object object = interfaceSensor.get(0).getValue();
 		double windGUI = ((Double) object).doubleValue();
 		// System.out.println("WIND:"+windGUI);
@@ -51,17 +51,17 @@ public class AirConditionController implements Actor {// implements observer to
 		int timeGUI = ((Integer) object).intValue();
 		// System.out.println(timeGUI);
 
-		if (timeGUI >= 2100 || timeGUI <= 600) {
+		if (isNight(timeGUI) || isMorning(timeGUI)) {
 			if (!energySavingMode) {
-				temp = 27;
+				desiredTemperature();
 			} else {
 				bestTemperature(tempGUI);
 
 			}
 		} else {
-			if (tempGUI >= 34) {
+			if (isTooHot(tempGUI)) {
 				if (!energySavingMode) {
-					temp = 27;
+					desiredTemperature();
 				} else {
 					bestTemperature(tempGUI);
 
@@ -73,7 +73,7 @@ public class AirConditionController implements Actor {// implements observer to
 				temp = -1;
 			} else if (tempGUI == 32 && windGUI > 30) {
 				if (!energySavingMode) {
-					temp = 27;
+					desiredTemperature();
 				} else {
 					bestTemperature(tempGUI);
 
@@ -90,11 +90,28 @@ public class AirConditionController implements Actor {// implements observer to
 		} else {
 			saving = desiredEnergySaving;
 		}
-		//energySaveAL.add(saving);
 		gui.setEnergy(saving);
 		setTemperature(temp);	
 		cost = cost + ((100-saving)*0.000001);
 		gui.setCost(cost);
+		System.out.println(cost);
+	}
+
+	private boolean isTooHot(double tempGUI) {
+		return tempGUI >= 34;
+	}
+
+	private boolean isMorning(int timeGUI) {
+		return timeGUI <= 600;
+	}
+
+	private boolean isNight(int timeGUI) {
+		return timeGUI >= 2100;
+	}
+
+	private double desiredTemperature() {
+		//return temp = gui.getDesiredTemperature();
+		return temp=27;
 	}
 
 	private void bestTemperature(double tempGUI) {
