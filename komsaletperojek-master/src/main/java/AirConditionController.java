@@ -66,10 +66,11 @@ public class AirConditionController implements Actor {// implements observer to
 				if (!energySavingMode) {
 					temp = 27;
 				} else {
-					if (tempGUI < 27)
-						temp = ((desiredEnergySaving / 100) * (38 - tempGUI) + tempGUI);
+					if (tempGUI <= 27){
+						temp = (tempGUI+(((38-tempGUI)/desiredEnergySaving)));
+					}
 					else {
-						temp = ((desiredEnergySaving / 100) * (tempGUI - 38) + tempGUI);
+						temp = ((((desiredEnergySaving - 100) * (38 - tempGUI))/100) + tempGUI);
 					}
 
 				}
@@ -82,10 +83,11 @@ public class AirConditionController implements Actor {// implements observer to
 				if (!energySavingMode) {
 					temp = 27;
 				} else {
-					if (tempGUI < 27)
-						temp = ((desiredEnergySaving / 100) * (38 - tempGUI) + tempGUI);
+					if (tempGUI <= 27){
+						temp = (tempGUI+(((38-tempGUI)/desiredEnergySaving)));
+					}
 					else {
-						temp = ((desiredEnergySaving / 100) * (tempGUI - 38) + tempGUI);
+						temp = ((((desiredEnergySaving - 100) * (38 - tempGUI))/100) + tempGUI);
 					}
 
 				}
