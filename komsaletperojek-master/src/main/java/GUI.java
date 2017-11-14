@@ -200,6 +200,7 @@ public class GUI{
     c.gridheight=1;
     pane.add(energy, c);
     
+ 
     toggleEnergy = new JToggleButton("Energy Saving On/Off");
     c.gridx = 0;
     c.gridy = 5;
@@ -209,12 +210,11 @@ public class GUI{
 	   {
 		   JToggleButton tgl = (JToggleButton)event.getSource();
 		 if(tgl.isSelected()){
-			 System.out.println("selected");
 			 toggleEnergySvg=true;
 			 textField.setText(temp+"°C");
 			 energy.setText(energySvg+"%");
 		 }else{
-			 System.out.println("not selected");
+
 			 toggleEnergySvg=false;
 		 }
 	   }
